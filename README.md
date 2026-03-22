@@ -35,7 +35,7 @@ cd MusicAI
 
 ```powershell
 python -m venv venv
-.\venv\Scripts\Activate.ps1
+venv\Scripts\activate
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 Copy-Item .env.example .env
@@ -55,7 +55,8 @@ cd ..
 Terminal A (backend):
 
 ```powershell
-.\venv\Scripts\python.exe -m uvicorn app:app --reload
+venv\Scripts\activate
+uvicorn app:app --reload
 ```
 
 Terminal B (frontend):
