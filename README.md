@@ -70,6 +70,18 @@ cd ..
 
 ### 5) Run app
 
+**Option A - Automatic (Recommended for Windows)**
+
+Simply run the batch file:
+
+```powershell
+.\run.bat
+```
+
+This starts both backend and frontend in separate windows automatically.
+
+**Option B - Manual (Two terminals)**
+
 Terminal A (backend):
 
 ```powershell
@@ -84,7 +96,7 @@ cd frontend
 npm run dev
 ```
 
-Open: [http://127.0.0.1:5173](http://127.0.0.1:5173)
+Then open: [http://127.0.0.1:5173](http://127.0.0.1:5173)
 
 ## Environment Configuration
 
