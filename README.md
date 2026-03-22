@@ -34,7 +34,7 @@ cd MusicAI
 ### 2) Backend setup
 
 ```powershell
-python -m venv .venv
+python -m venv venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
 pip install -r requirements.txt
@@ -55,7 +55,7 @@ cd ..
 Terminal A (backend):
 
 ```powershell
-.\.venv\Scripts\python.exe -m uvicorn app:app --reload
+.\venv\Scripts\python.exe -m uvicorn app:app --reload
 ```
 
 Terminal B (frontend):
