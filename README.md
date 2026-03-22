@@ -41,7 +41,24 @@ pip install -r requirements.txt
 Copy-Item .env.example .env
 ```
 
-### 3) Frontend setup
+### 3) Pre-download the MusicGen model (IMPORTANT)
+
+This step downloads the model (~1.5 GB) before running the app. This reduces the first API request time from **5-15 minutes to seconds**.
+
+```powershell
+# Still in venv
+python download_model.py
+```
+
+This will:
+- Download facebook/musicgen-small model weights
+- Cache them in ~/.cache/huggingface/hub/
+- Take 5-20 minutes depending on internet speed
+- Display progress and confirmation when complete
+
+**⚠️ Important:** Do this step before starting the app for instant first requests!
+
+### 4) Frontend setup
 
 ```powershell
 cd frontend
@@ -50,7 +67,7 @@ Copy-Item .env.example .env
 cd ..
 ```
 
-### 4) Run app
+### 5) Run app
 
 Terminal A (backend):
 
@@ -103,11 +120,21 @@ Response example:
 }
 ```
 
+## Model Details
+
+- **Model**: facebook/musicgen-small (configurable via MUSICGEN_MODEL env var)
+- **Cache**: ~/.cache/huggingface/hub/ (auto-managed by Hugging Face)
+- **Download Size**: ~1.5 GB
+- **Device**: Auto-detects GPU (CUDA), falls back to CPU
+- **Pre-download**: Use `python download_model.py` for manual download before running app
+
 ## Notes
 
-- First real generation can take longer due to model load/download.
-- Generated audio is saved in generated_audio/ and excluded from git.
-- Use FORCE_DEMO_MODE=true for fast frontend-only checks.
+- Pre-download the model using `python download_model.py` before the first run for fastest subsequent requests
+- After pre-download, the first real generation is instant; only initialization takes <1 second
+- Generated audio is saved in generated_audio/ and excluded from git
+- Use FORCE_DEMO_MODE=true for fast frontend-only checks without generation
+- hf-transfer package enables fast parallel downloads from Hugging Face Hub
 
 ## License
 
