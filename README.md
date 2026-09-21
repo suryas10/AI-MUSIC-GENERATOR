@@ -31,17 +31,32 @@ git clone <your-repo-url>
 cd MusicAI
 ```
 
-### 2) Backend setup
+### 2) One-command setup and run
+
+On Windows, the easiest path is to run the batch file. It will:
+
+- Check for Python 3.10+
+- Create or reuse the local `.venv`
+- Create safe `.env` files from the tracked examples if they are missing
+- Install backend and frontend dependencies
+- Download the MusicGen model if it is not cached yet
+- Launch the backend and frontend in separate windows
 
 ```powershell
-python -m venv venv
-venv\Scripts\activate
+.\run.bat
+```
+
+### 3) Manual backend setup
+
+```powershell
+python -m venv .venv
+.venv\Scripts\activate
 python -m pip install --upgrade pip
 pip install -r requirements.txt
 Copy-Item .env.example .env
 ```
 
-### 3) Pre-download the MusicGen model (IMPORTANT)
+### 4) Pre-download the MusicGen model (optional)
 
 This step downloads the model (~1.5 GB) before running the app. This reduces the first API request time from **5-15 minutes to seconds**.
 
@@ -59,7 +74,7 @@ This will:
 
 **⚠️ Important:** Do this step before starting the app for instant first requests!
 
-### 4) Frontend setup
+### 5) Frontend setup
 
 ```powershell
 cd frontend
@@ -68,24 +83,12 @@ Copy-Item .env.example .env
 cd ..
 ```
 
-### 5) Run app
-
-**Option A - Automatic (Recommended for Windows)**
-
-Simply run the batch file:
-
-```powershell
-.\run.bat
-```
-
-This starts both backend and frontend in separate windows automatically.
-
-**Option B - Manual (Two terminals)**
+### 6) Manual run
 
 Terminal A (backend):
 
 ```powershell
-venv\Scripts\activate
+.venv\Scripts\activate
 uvicorn app:app --reload
 ```
 
@@ -147,8 +150,6 @@ Response example:
 - After pre-download, the first real generation is instant; only initialization takes <1 second
 - Generated audio is saved in generated_audio/ and excluded from git
 - Use FORCE_DEMO_MODE=true for fast frontend-only checks without generation
-- hf-transfer package enables fast parallel downloads from Hugging Face Hub
-
 ## License
 
 MIT
