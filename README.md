@@ -4,23 +4,23 @@ SonicCanvas is a prompt-to-music web app with a FastAPI backend and a modern Rea
 
 ## Highlights
 
-- Local open-source MusicGen generation (no paid API required)
-- Clean, responsive UI with interactive prompt helpers
-- Play and download generated WAV output
-- CORS-ready local dev setup
-- Demo mode toggle for quick UI verification
+- Local open-source MusicGen generation without a paid API
+- Clean React + Vite interface with prompt presets
+- Generate, preview, and download WAV files locally
+- FastAPI backend with CORS enabled for local app usage
+- Demo mode for frontend-only checks without model generation
 
 ## Tech Stack
 
-- Backend: FastAPI, Transformers, PyTorch, SciPy
-- Frontend: React, Vite, CSS animations
+- Backend: FastAPI, Transformers, PyTorch, SciPy, python-dotenv
+- Frontend: React, Vite
 
 ## Prerequisites
 
-- Python 3.10+
-- Node.js 18+
-- Recommended RAM: 8 GB+
-- Internet on first run to download model weights
+- Python 3.10 or newer
+- Node.js 18 or newer
+- Recommended RAM: 8 GB or more
+- Internet connection for first-time model download
 
 ## Quick Start
 
@@ -33,14 +33,15 @@ cd MusicAI
 
 ### 2) One-command setup and run
 
-On Windows, the easiest path is to run the batch file. It will:
+On Windows, the easiest option is to run the batch file from the project root. It will:
 
-- Check for Python 3.10+
-- Create or reuse the local `.venv`
-- Create safe `.env` files from the tracked examples if they are missing
-- Install backend and frontend dependencies
-- Download the MusicGen model if it is not cached yet
-- Launch the backend and frontend in separate windows
+- detect a supported Python version (3.10+)
+- create or reuse the local `.venv` inside the project
+- copy the example `.env` files if they do not already exist
+- install backend dependencies from [requirements.txt](requirements.txt)
+- install frontend dependencies in [frontend/package.json](frontend/package.json)
+- download the MusicGen model cache when it is missing
+- launch the backend and frontend in separate windows
 
 ```powershell
 .\run.bat
@@ -51,28 +52,21 @@ On Windows, the easiest path is to run the batch file. It will:
 ```powershell
 python -m venv .venv
 .venv\Scripts\activate
-python -m pip install --upgrade pip
+python -m pip install --upgrade pip setuptools wheel
 pip install -r requirements.txt
 Copy-Item .env.example .env
 ```
 
-### 4) Pre-download the MusicGen model (optional)
+### 4) Optional model pre-download
 
-This step downloads the model (~1.5 GB) before running the app. This reduces the first API request time from **5-15 minutes to seconds**.
+This downloads the MusicGen checkpoint into the local Hugging Face cache before the first request. It can reduce the first generation delay substantially, but it is optional.
 
 ```powershell
-# Still in venv
+# inside the project venv
 python download_model.py
 ```
 
-This will:
-
-- Download facebook/musicgen-small model weights
-- Cache them in ~/.cache/huggingface/hub/
-- Take 5-20 minutes depending on internet speed
-- Display progress and confirmation when complete
-
-**⚠️ Important:** Do this step before starting the app for instant first requests!
+This may take several minutes depending on bandwidth and hardware.
 
 ### 5) Frontend setup
 
@@ -89,14 +83,14 @@ Terminal A (backend):
 
 ```powershell
 .venv\Scripts\activate
-uvicorn app:app --reload
+uvicorn app:app --reload --host 127.0.0.1 --port 8000
 ```
 
 Terminal B (frontend):
 
 ```powershell
 cd frontend
-npm run dev
+npm run dev -- --host 127.0.0.1 --port 5173
 ```
 
 Then open: [http://127.0.0.1:5173](http://127.0.0.1:5173)
@@ -138,18 +132,20 @@ Response example:
 
 ## Model Details
 
-- **Model**: facebook/musicgen-small (configurable via MUSICGEN_MODEL env var)
-- **Cache**: ~/.cache/huggingface/hub/ (auto-managed by Hugging Face)
-- **Download Size**: ~1.5 GB
-- **Device**: Auto-detects GPU (CUDA), falls back to CPU
-- **Pre-download**: Use `python download_model.py` for manual download before running app
+- **Model**: facebook/musicgen-small (configured with the `MUSICGEN_MODEL` environment variable)
+- **Cache**: `%USERPROFILE%\.cache\huggingface\hub\` on Windows
+- **Download Size**: roughly 1.5 GB depending on the selected checkpoint
+- **Device**: automatically uses CUDA when available, otherwise CPU
+- **Pre-download**: optional; use `python download_model.py` to warm the cache before generation
 
 ## Notes
 
-- Pre-download the model using `python download_model.py` before the first run for fastest subsequent requests
-- After pre-download, the first real generation is instant; only initialization takes <1 second
-- Generated audio is saved in generated_audio/ and excluded from git
-- Use FORCE_DEMO_MODE=true for fast frontend-only checks without generation
+- The backend reads configuration from the project root `.env` file.
+- The frontend reads `VITE_API_BASE_URL` from `frontend/.env`.
+- Generated audio is saved in the local `generated_audio/` directory and is ignored by Git.
+- Set `FORCE_DEMO_MODE=true` to use a demo audio response instead of local generation.
+- The repo intentionally keeps only example environment files in version control; personal or sensitive values should stay out of the project folder.
+
 ## License
 
 MIT
